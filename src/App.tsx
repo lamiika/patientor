@@ -16,10 +16,10 @@ const App: React.FC = () => {
 
     const fetchPatientList = async () => {
       try {
-        const { data: patientListFromApi } = await axios.get<Patient[]>(
+        const { data: patients } = await axios.get<Patient[]>(
           `${apiBaseUrl}/patients`
         );
-        dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
+        dispatch({ type: "SET_PATIENT_LIST", payload: patients });
       } catch (e) {
         console.error(e);
       }
