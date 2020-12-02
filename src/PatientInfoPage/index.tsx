@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue, updatePatient } from '../state';
-import { Patient, Gender } from '../types';
-import { Header, Icon, List } from 'semantic-ui-react';
+import { Patient, Gender, Entry } from '../types';
+import { Header, Icon, List, Container } from 'semantic-ui-react';
 import patientService from '../services/patients';
 
 const PatientInfoPage: React.FC = () => {
@@ -23,7 +23,7 @@ const PatientInfoPage: React.FC = () => {
     } else {
       setPatient(cachePatient);
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, patients]);
 
   const getIconByGender = (gender: Gender) => {
     switch (gender) {
@@ -35,6 +35,20 @@ const PatientInfoPage: React.FC = () => {
         return <Icon name='genderless' size='small' />;
     }
   };
+
+  const listDiagnosisCodes = (entry: Entry) => {
+    if (entry.diagnosisCodes) {
+      return (
+        <List bulleted style={{ 'marginLeft': '40px' }}>
+          {entry.diagnosisCodes.map(diagnosisCode =>
+            <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>
+          )}
+        </List>
+      );
+    }
+
+    return null;
+  }
 
   if (patient) {
     return (
@@ -48,6 +62,13 @@ const PatientInfoPage: React.FC = () => {
           <List.Item>occupation: {patient.occupation}</List.Item>
           <List.Item>dateOfBirth: {patient.dateOfBirth ? patient.dateOfBirth : 'unknown'}</List.Item>
         </List>
+        <Header as='h3'>entries</Header>
+        {patient.entries.map(entry =>
+          <Container key={entry.id}>
+            <p>{entry.date + ' '} {entry.description}</p>
+            {listDiagnosisCodes(entry)}
+          </Container>
+        )}
       </div>
     );
   };
