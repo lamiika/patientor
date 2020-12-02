@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue } from '../state';
 import { Patient, Gender } from '../types';
@@ -18,7 +18,7 @@ const PatientInfoPage: React.FC = () => {
       default:
         return <Icon name='genderless' size='small' />;
     }
-  }
+  };
 
   if (patient) {
     return (

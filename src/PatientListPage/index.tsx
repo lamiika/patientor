@@ -7,7 +7,7 @@ import AddPatientModal from "../AddPatientModal";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue } from "../state";
+import { useStateValue, addPatient } from "../state";
 import { useHistory } from "react-router-dom";
 
 const PatientListPage: React.FC = () => {
@@ -26,11 +26,11 @@ const PatientListPage: React.FC = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const { data: patientListFromApi } = await axios.post<Patient>(
+      const { data: patient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients`,
         values
       );
-      dispatch({ type: "ADD_PATIENT", payload: patientListFromApi });
+      dispatch(addPatient(patient));
       closeModal();
     } catch (e) {
       console.error(e.response.data);
