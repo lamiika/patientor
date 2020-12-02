@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useStateValue } from '../state';
+import { useStateValue, updatePatient } from '../state';
 import { Patient, Gender } from '../types';
 import { Header, Icon, List } from 'semantic-ui-react';
+import patientService from '../services/patients';
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<({ id: string })>();
-  const [{ patients }] = useStateValue();
-  const patient: Patient = patients[id];
+  const [{ patients }, dispatch] = useStateValue();
+  const [patient, setPatient] = useState<Patient>();
+
+  useEffect(() => {
+    const cachePatient: Patient = patients[id];
+    const getPatient = async () => {
+      const result = await patientService.getOne(id);
+      
+      dispatch(updatePatient(result));
+      setPatient(result);
+    }
+    if (!cachePatient || Object.keys(cachePatient).length < 7) {
+      getPatient();
+    } else {
+      setPatient(cachePatient);
+    }
+  }, [dispatch, id]);
 
   const getIconByGender = (gender: Gender) => {
     switch (gender) {
