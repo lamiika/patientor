@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue, updatePatient } from '../state';
-import { Patient, Gender, Entry } from '../types';
+import { Patient, Gender, Entry, Diagnosis } from '../types';
 import { Header, Icon, List, Container } from 'semantic-ui-react';
 import patientService from '../services/patients';
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<({ id: string })>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient>();
 
   useEffect(() => {
@@ -37,11 +37,11 @@ const PatientInfoPage: React.FC = () => {
   };
 
   const listDiagnosisCodes = (entry: Entry) => {
-    if (entry.diagnosisCodes) {
+    if (entry.diagnosisCodes && Object.keys(diagnoses).length > 0) {
       return (
         <List bulleted style={{ 'marginLeft': '40px' }}>
           {entry.diagnosisCodes.map(diagnosisCode =>
-            <List.Item key={diagnosisCode}>{diagnosisCode}</List.Item>
+            <List.Item key={diagnosisCode}>{diagnosisCode} {diagnoses[diagnosisCode].name}</List.Item>
           )}
         </List>
       );

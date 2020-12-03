@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
-import { useStateValue, setPatientList } from "./state";
+import { useStateValue, setPatientList, setDiagnosisList } from "./state";
 import { Patient } from "./types";
+import diagnosisService from "./services/diagnosis";
 
 import PatientListPage from "./PatientListPage";
 import PatientInfoPage from "./PatientInfoPage";
@@ -26,6 +27,19 @@ const App: React.FC = () => {
       }
     };
     fetchPatientList();
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    const fetchDiagnosisList = async () => {
+      try {
+        const diagnosisListFromApi = await diagnosisService.getAll();
+
+        dispatch(setDiagnosisList(diagnosisListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchDiagnosisList();
   }, [dispatch]);
 
   return (
