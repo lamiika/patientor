@@ -1,6 +1,7 @@
 import React from "react";
 import { HealthCheckEntry } from "../types";
 import { Container, Header, Icon } from "semantic-ui-react";
+import HealthRatingIcon from "./HealthRatingIcon";
 
 const HealthCheck: React.FC<({ entry: HealthCheckEntry })> = ({ entry }) => {
   const inline = { "display": "inline-block" };
@@ -12,6 +13,7 @@ const HealthCheck: React.FC<({ entry: HealthCheckEntry })> = ({ entry }) => {
       </Header>
       <Icon name="doctor" size="big" style={inline} />
       <p style={{ "fontStyle": "italic" }}>{entry.description}</p>
+      <HealthRatingIcon rating={entry.healthCheckRating} />
     </Container>
   );
 };

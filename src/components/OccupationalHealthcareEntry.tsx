@@ -9,7 +9,7 @@ const OccupationalHealthcare: React.FC<({ entry: OccupationalHealthCareEntry })>
     <Container>
       <Header as="h4" style={inline}>{entry.date}</Header>
       <Icon name="stethoscope" size="big" style={inline} />
-      <Header as="h4" style={inline}>{entry.employerName}</Header>
+      <Header as="h4" style={{ ...inline, "marginTop": "0px" }}>{entry.employerName}</Header>
       <p style={{ "fontStyle": "italic" }}>{entry.description}</p>
     </Container>
   );
