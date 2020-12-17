@@ -49,7 +49,7 @@ export const reducer = (state: State, action: Action): State => {
         }
       };
     case "SET_DIAGNOSIS_LIST":
-      const thing = {
+      return {
         ...state,
         diagnoses: {
           ...action.payload.reduce(
@@ -58,8 +58,6 @@ export const reducer = (state: State, action: Action): State => {
           )
         }
       }
-      console.log(thing);
-      return thing;
     default:
       return state;
   }

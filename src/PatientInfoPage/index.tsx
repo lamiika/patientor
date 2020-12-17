@@ -1,15 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue, updatePatient } from '../state';
-import { Patient, Gender } from '../types';
-import { Header, Icon, List } from 'semantic-ui-react';
+import { Patient, Gender, EntryFormValues, Entry } from '../types';
+import { Button, Header, Icon, List } from 'semantic-ui-react';
 import patientService from '../services/patients';
 import Entries from '../components/Entries';
+import AddEntryModal from '../AddEntryModal';
 
 const PatientInfoPage: React.FC = () => {
   const { id } = useParams<({ id: string })>();
   const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = useState<Patient>();
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      console.log(values);
+      const entry: Entry = await patientService.submitEntry(values, id);
+      if (patient) {
+        const updatedPatient: Patient = ({ ...patient, entries: [ ...patient.entries, entry ] })
+        dispatch(updatePatient(updatedPatient));
+        setPatient(updatedPatient)
+      }
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data.error);
+    }
+  };
 
   useEffect(() => {
     const cachePatient: Patient = patients[id];
@@ -50,6 +77,13 @@ const PatientInfoPage: React.FC = () => {
           <List.Item>dateOfBirth: {patient.dateOfBirth ? patient.dateOfBirth : 'unknown'}</List.Item>
         </List>
         <Entries entries={patient.entries} />
+        <AddEntryModal
+          modalOpen={modalOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeModal}
+        />
+        <Button onClick={() => openModal()}>Add New Entry</Button>
       </div>
     );
   };

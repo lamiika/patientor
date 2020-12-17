@@ -71,3 +71,9 @@ export interface Patient {
   dateOfBirth?: string;
   entries: Entry[];
 }
+
+export type HospitalFormValues = Omit<HospitalEntry, 'id'>;
+
+export type EntryFormValues = HospitalFormValues;
+
+export type EntryPatientId = Entry & { patientId: string }

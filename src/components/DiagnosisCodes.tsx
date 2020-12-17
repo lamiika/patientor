@@ -4,7 +4,7 @@ import { List } from "semantic-ui-react";
 import { useStateValue } from "../state"
 
 const DiagnosisCodes: React.FC<{ entry: Entry }> = ({ entry }) => {
-  const [{ diagnoses }, dispatch] = useStateValue();
+  const [{ diagnoses }] = useStateValue();
 
   if (entry.diagnosisCodes && Object.keys(diagnoses).length > 0) {
     return (
