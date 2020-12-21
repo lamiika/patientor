@@ -13,6 +13,10 @@ interface Props {
 const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnoses }] = useStateValue();
 
+  const isDate = (date: string): boolean => {
+    return Boolean(Date.parse(date));
+  };
+
   return (
     <Formik
       initialValues={{
@@ -33,11 +37,17 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.date) {
           errors.date = requiredError;
         }
+        if (!isDate(values.date)) {
+          errors.date = "Date must be YYYY-MM-DD";
+        }
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
         if (!values.discharge.date) {
           errors["discharge.date"] = requiredError;
+        }
+        if (!isDate(values.discharge.date)) {
+          errors["discharge.date"] = "Discharge date must be YYYY-MM-DD";
         }
         if (!values.discharge.criteria) {
           errors["discharge.criteria"] = requiredError;
