@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStateValue, updatePatient } from '../state';
-import { Patient, Gender, EntryFormValues, Entry } from '../types';
+import { Patient, Gender, EntryFormValues, Entry, EntryType } from '../types';
 import { Button, Header, Icon, List } from 'semantic-ui-react';
 import patientService from '../services/patients';
 import Entries from '../components/Entries';
@@ -13,9 +13,13 @@ const PatientInfoPage: React.FC = () => {
   const [patient, setPatient] = useState<Patient>();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [modalType, setModalType] = React.useState<EntryType>("Hospital");
   const [error, setError] = React.useState<string | undefined>();
 
-  const openModal = (): void => setModalOpen(true);
+  const openModal = (type: EntryType): void => {
+    setModalOpen(true);
+    setModalType(type);
+  };
 
   const closeModal = (): void => {
     setModalOpen(false);
@@ -79,11 +83,14 @@ const PatientInfoPage: React.FC = () => {
         <Entries entries={patient.entries} />
         <AddEntryModal
           modalOpen={modalOpen}
+          modalType={modalType}
           onSubmit={submitNewEntry}
           error={error}
           onClose={closeModal}
         />
-        <Button onClick={() => openModal()}>Add New Entry</Button>
+        <Button onClick={() => openModal("Hospital")}>Add New Hospital Entry</Button>
+        <Button onClick={() => openModal("OccupationalHealthcare")}>Add New Occupational Entry</Button>
+        <Button onClick={() => openModal("HealthCheck")}>Add New Health Check Entry</Button>
       </div>
     );
   };

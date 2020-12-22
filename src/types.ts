@@ -18,11 +18,10 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
-export enum EntryType {
-  Hospital = "Hospital",
-  OccupationalHealthcare = "OccupationalHealthcare",
-  HealthCheck = "HealthCheck"
-}
+export type EntryType = 
+  | "Hospital"
+  | "OccupationalHealthcare"
+  | "HealthCheck";
 
 export enum HealthCheckRating {
   "Healthy" = 0,
@@ -72,8 +71,32 @@ export interface Patient {
   entries: Entry[];
 }
 
-export type HospitalFormValues = Omit<HospitalEntry, 'id'>;
+export type HospitalFormValues = Omit<HospitalEntry, "id">;
 
-export type EntryFormValues = HospitalFormValues;
+export type OccupationalFormValues = Omit<OccupationalHealthCareEntry, "id">;
 
-export type EntryPatientId = Entry & { patientId: string }
+export type HealthCheckFormValues = Omit<HealthCheckEntry, "id">;
+
+export type EntryFormValues =
+  | HospitalFormValues
+  | OccupationalFormValues
+  | HealthCheckFormValues;
+
+export type EntryPatientId = Entry & { patientId: string };
+
+/*
+description
+date
+specialist
+diagnosisCodes
+type: "OccupationalHealthCare"
+employerName
+sickLeave: SickLeave
+
+description
+date
+specialist
+diagnosisCodes
+type: "HealthCheck"
+healthCheckRating: HealthCheckRating
+*/

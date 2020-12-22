@@ -2,21 +2,28 @@ import React from "react";
 import { useStateValue } from "../state";
 import { Formik, Form, Field } from "formik"
 import { DiagnosisSelection, TextField } from "../AddPatientModal/FormField";
-import { EntryFormValues, Discharge } from "../types";
+import { HospitalFormValues, Discharge } from "../types";
 import { Button, Grid } from "semantic-ui-react";
 
 interface Props {
-  onSubmit: (values: EntryFormValues) => void;
+  onSubmit: (values: HospitalFormValues) => void;
   onCancel: () => void;
 }
 
-const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnoses }] = useStateValue();
 
   const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date));
   };
-
+/*
+description
+date
+specialist
+diagnosisCodes
+type: "HealthCheck"
+healthCheckRating: HealthCheckRating
+*/
   return (
     <Formik
       initialValues={{
@@ -26,8 +33,8 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         diagnosisCodes: [],
         type: "Hospital",
         discharge: {
-          date: "2020-12-20",
-          criteria: "Getting well"
+          date: "",
+          criteria: ""
         }
       }}
       onSubmit={onSubmit}
@@ -118,4 +125,4 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddEntryForm;
+export default AddHospitalEntryForm;
