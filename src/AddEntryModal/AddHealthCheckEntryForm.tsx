@@ -1,21 +1,25 @@
 import React from "react";
 import { useStateValue } from "../state";
 import { Formik, Form, Field } from "formik"
-import { DiagnosisSelection, TextField } from "../AddPatientModal/FormField";
-import { HospitalFormValues, Discharge } from "../types";
+import { DiagnosisSelection, TextField, NumberField } from "../AddPatientModal/FormField";
+import { HealthCheckFormValues } from "../types";
 import { Button, Grid } from "semantic-ui-react";
 
 interface Props {
-  onSubmit: (values: HospitalFormValues) => void;
+  onSubmit: (values: HealthCheckFormValues) => void;
   onCancel: () => void;
 }
 
-const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const AddHealthCheckEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   const [{ diagnoses }] = useStateValue();
 
   const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date));
   };
+
+  const isRating = (rating: number): boolean => {
+    return rating >= 0 && rating <= 3 && (typeof rating === "number");
+  }
 
   return (
     <Formik
@@ -24,16 +28,13 @@ const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         date: "",
         specialist: "",
         diagnosisCodes: [],
-        type: "Hospital",
-        discharge: {
-          date: "",
-          criteria: ""
-        }
+        type: "HealthCheck",
+        healthCheckRating: 0
       }}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
-        const errors: { [field: string]: string | Discharge } = {};
+        const errors: { [field: string]: string } = {};
         if (!values.description) {
           errors.description = requiredError;
         }
@@ -45,11 +46,12 @@ const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
-        if (!values.discharge.date) {
-          errors.discharge = { ...errors.discharge as Discharge, date: requiredError };
-        }
-        if (!values.discharge.criteria) {
-          errors.discharge = { ...errors.discharge as Discharge, criteria: requiredError };
+        if (!isRating(values.healthCheckRating)) {
+          errors.healthCheckRating = "Health check rating must be 0-3"
+
+          if (!values.healthCheckRating) {
+            errors.healthCheckRating = requiredError;
+          }
         }
         return errors;
       }}
@@ -76,16 +78,11 @@ const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
               component={TextField}
             />
             <Field
-              label="Discharge date"
-              placeholder="Discharge date"
-              name="discharge.date"
-              component={TextField}
-            />
-            <Field
-              label="Discharge criteria"
-              placeholder="Discharge criteria"
-              name="discharge.criteria"
-              component={TextField}
+              label="healthCheckRating"
+              name="healthCheckRating"
+              component={NumberField}
+              min={0}
+              max={3}
             />
             <DiagnosisSelection
               setFieldValue={setFieldValue}
@@ -116,4 +113,4 @@ const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   );
 };
 
-export default AddHospitalEntryForm;
+export default AddHealthCheckEntryForm;

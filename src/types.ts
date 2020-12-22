@@ -83,20 +83,3 @@ export type EntryFormValues =
   | HealthCheckFormValues;
 
 export type EntryPatientId = Entry & { patientId: string };
-
-/*
-description
-date
-specialist
-diagnosisCodes
-type: "OccupationalHealthCare"
-employerName
-sickLeave: SickLeave
-
-description
-date
-specialist
-diagnosisCodes
-type: "HealthCheck"
-healthCheckRating: HealthCheckRating
-*/

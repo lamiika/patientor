@@ -20,15 +20,15 @@ const AddOccupationalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
   return (
     <Formik
       initialValues={{
-        description: "Occupational entry",
-        date: "2020-12-17",
-        specialist: "Dr. Dr",
+        description: "",
+        date: "",
+        specialist: "",
         diagnosisCodes: [],
         type: "OccupationalHealthcare",
-        employerName: "Employer",
+        employerName: "",
         sickLeave: {
-          startDate: "2020-12-17",
-          endDate: "2020-12-20"
+          startDate: "",
+          endDate: ""
         }
       }}
       onSubmit={onSubmit}
@@ -50,15 +50,17 @@ const AddOccupationalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
           errors.employerName = requiredError;
         }
         if (values.sickLeave?.startDate || values.sickLeave?.endDate) {
+          if (!isDate(values.sickLeave.startDate)) {
+            errors.sickLeave = { ...errors.sickLeave as SickLeave, startDate: "Sick leave start date must be YYYY-MM-DD" };
+          }
           if (!values.sickLeave.startDate) {
             errors.sickLeave = { ...errors.sickLeave as SickLeave, startDate: requiredError};
-          } else if (!isDate(values.sickLeave.startDate)) {
-            errors.sickLeave = { ...errors.sickLeave as SickLeave, startDate: "Sick leave start date must be YYYY-MM-DD" };
+          }
+          if (!isDate(values.sickLeave.endDate)) {
+            errors.sickLeave = { ...errors.sickLeave as SickLeave, endDate: "Sick leave end date must be YYYY-MM-DD" };
           }
           if (!values.sickLeave.endDate) {
             errors.sickLeave = { ...errors.sickLeave as SickLeave, endDate: requiredError};
-          } else if (!isDate(values.sickLeave.endDate)) {
-            errors.sickLeave = { ...errors.sickLeave as SickLeave, endDate: "Sick leave end date must be YYYY-MM-DD" };
           }
         }
         return errors;
