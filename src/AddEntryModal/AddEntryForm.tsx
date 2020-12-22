@@ -2,7 +2,7 @@ import React from "react";
 import { useStateValue } from "../state";
 import { Formik, Form, Field } from "formik"
 import { DiagnosisSelection, TextField } from "../AddPatientModal/FormField";
-import { EntryFormValues } from "../types";
+import { EntryFormValues, Discharge } from "../types";
 import { Button, Grid } from "semantic-ui-react";
 
 interface Props {
@@ -25,32 +25,33 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
         specialist: "Dr. Dr",
         diagnosisCodes: [],
         type: "Hospital",
-        discharge: { date: "2020-12-20", criteria: "Getting well" }
+        discharge: {
+          date: "2020-12-20",
+          criteria: "Getting well"
+        }
       }}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
-        const errors: { [field: string]: string } = {};
+        const errors: { [field: string]: string | Discharge } = {};
         if (!values.description) {
           errors.description = requiredError;
         }
         if (!values.date) {
           errors.date = requiredError;
-        }
-        if (!isDate(values.date)) {
+        } else if (!isDate(values.date)) {
           errors.date = "Date must be YYYY-MM-DD";
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
         }
         if (!values.discharge.date) {
-          errors["discharge.date"] = requiredError;
-        }
-        if (!isDate(values.discharge.date)) {
-          errors["discharge.date"] = "Discharge date must be YYYY-MM-DD";
+          errors.discharge = { ...errors.discharge as Discharge, date: requiredError };
+        } else if (!isDate(values.discharge.date)) {
+          errors.discharge = { ...errors.discharge as Discharge, date: "Discharge date must be YYYY-MM-DD" };
         }
         if (!values.discharge.criteria) {
-          errors["discharge.criteria"] = requiredError;
+          errors.discharge = { ...errors.discharge as Discharge, criteria: requiredError };
         }
         return errors;
       }}
